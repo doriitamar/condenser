@@ -109,9 +109,8 @@ export default function(html, { mutate = true, hideImages = false } = {}) {
             ...state,
         };
     } catch (error) {
-        // Not Used, parseFromString might throw an error in the future
-        console.error(error.toString());
-        return { html };
+        // xmldom error is bad
+        throw new Error('HtmlReady: xmldom error');
     }
 }
 
@@ -143,9 +142,7 @@ function link(state, child) {
 
             // Unlink potential phishing attempts
             if (
-                child.textContent.match(
-                    /https?:\/\/(.*@)?(www\.)?steemit\.com/
-                ) &&
+                child.textContent.match(/(www\.)?steemit\.com/) &&
                 !url.match(/https?:\/\/(.*@)?(www\.)?steemit\.com/)
             ) {
                 const phishyDiv = child.ownerDocument.createElement('div');
